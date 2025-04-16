@@ -1,0 +1,57 @@
+﻿@model IEnumerable<HRMS.Domain.Entities.Department>
+
+@{
+    ViewData["Title"] = "Index";
+    int index = 0;
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                SN
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            index++;
+
+            <tr>
+                <td>
+                    @index
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    <div class="btn btn-group">
+
+                        <a class="btn btn-sm btn-outline-warning" asp-action="edit" asp-route-id="@item.Id">
+                            <i class="fa fa-edit"></i>
+                            Edit
+                        </a>
+                        <a class="btn btn-sm btn-outline-success" asp-action="details" asp-route-id="@item.Id">
+                            <i class="fa fa-edit"></i>
+                            Details
+                        </a>
+                        <a class="btn btn-sm btn-outline-danger" asp-action="delete" asp-route-id="@item.Id">
+                            <i class="fa fa-edit"></i>
+                            Delete
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

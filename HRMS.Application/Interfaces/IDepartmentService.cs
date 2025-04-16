@@ -11,9 +11,9 @@ namespace HRMS.Application.Interfaces
     public interface IDepartmentService
     {
         Task<ServiceResult<IEnumerable<Department>>> GetAllAsync();
-        Task<ServiceResult<Department>> GetByIdAsync(Guid id);
+        Task<ServiceResult<Department>> GetByIdAsync(int id);
         Task<ServiceResult<bool>> AddAsync(Department department);
         Task<ServiceResult<bool>> UpdateAsync(Department department);
-        Task<ServiceResult<bool>> DeleteAsync(Guid id);
+        Task<ServiceResult<bool>> DeleteAsync(int id);
     }
 }

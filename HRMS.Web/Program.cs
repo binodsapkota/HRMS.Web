@@ -2,6 +2,7 @@ using HRMS.Application.Interfaces;
 using HRMS.Infrastructure.Persistence.Repositories;
 using HRMS.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using HRMS.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +10,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<HRMSDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<IEmployeeService, EmployeeRepository>();
+builder.Services.AddScoped<EmployeeRepository>();
+builder.Services.AddScoped<DepartmentRepository>();
+
+builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+
 
 
 builder.Services.AddControllersWithViews();

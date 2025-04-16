@@ -24,9 +24,9 @@ namespace HRMS.Infrastructure.Persistence
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Department>().HasData(
-                new Department { Id = Guid.NewGuid(), Name = "Human Resource" },
-                new Department { Id = Guid.NewGuid(), Name = "Engineering" },
-                new Department { Id = Guid.NewGuid(), Name = "Administration" }
+                new Department { Id = 1, Name = "Human Resource" },
+                new Department { Id = 2, Name = "Engineering" },
+                new Department { Id = 3, Name = "Administration" }
                 );
         }
     }
