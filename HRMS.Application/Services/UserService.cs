@@ -10,29 +10,29 @@ using System.Threading.Tasks;
 
 namespace HRMS.Application.Services
 {
-    public class EmployeeService : IEmployeeService
+    public class UserService : IUserService
     {
-        private readonly EmployeeRepository _employeeRepo;
+        private readonly UserRepository _userRepo;
 
-        public EmployeeService(EmployeeRepository employeeRepository)
+        public UserService(UserRepository userRepository)
         {
-            _employeeRepo = employeeRepository;
+            _userRepo = userRepository;
         }
 
-        public async Task<ServiceResult<bool>> AddAsync(Employee employee)
+        public async Task<ServiceResult<bool>> AddAsync(User user)
         {
-            var result = await _employeeRepo.AddAsync(employee);
+            var result = await _userRepo.AddAsync(user);
             if (result)
                 return new ServiceResult<bool>
                 {
-                    Message = "Employee Added Successfully",
+                    Message = "User Added Successfully",
                     Status = ResultStatus.Success,
                     Data = true
                 };
             else
                 return new ServiceResult<bool>
                 {
-                    Message = "Employee Added Successfully",
+                    Message = "User Added Successfully",
                     Status = ResultStatus.Failure,
                     Data = false
                 };
@@ -40,7 +40,7 @@ namespace HRMS.Application.Services
 
         public async Task<ServiceResult<bool>> DeleteAsync(int id)
         {
-            var result = await _employeeRepo.DeleteAsync(id);
+            var result = await _userRepo.DeleteAsync(id);
             if (result)
                 return new ServiceResult<bool>
                 {
@@ -58,39 +58,39 @@ namespace HRMS.Application.Services
 
         }
 
-        public async Task<ServiceResult<IEnumerable<Employee>>> GetAllAsync()
+        public async Task<ServiceResult<IEnumerable<User>>> GetAllAsync()
         {
-            var data = await _employeeRepo.GetAllAsync();
-            return new ServiceResult<IEnumerable<Employee>>
+            var data = await _userRepo.GetAllAsync();
+            return new ServiceResult<IEnumerable<User>>
             {
                 Data = data
             };
         }
 
-        public async Task<ServiceResult<Employee>> GetByIdAsync(int id)
+        public async Task<ServiceResult<User>> GetByIdAsync(int id)
         {
-            var data = await _employeeRepo.GetByIdAsync(id);
-            return new ServiceResult<Employee>
+            var data = await _userRepo.GetByIdAsync(id);
+            return new ServiceResult<User>
             {
                 Data = data,
                 Status=ResultStatus.Success
             };
         }
 
-        public async Task<ServiceResult<bool>> UpdateAsync(Employee employee)
+        public async Task<ServiceResult<bool>> UpdateAsync(User user)
         {
-            var result = await _employeeRepo.UpdateAsync(employee);
+            var result = await _userRepo.UpdateAsync(user);
             if (result)
                 return new ServiceResult<bool>
                 {
-                    Message = "Employee Updated Successfully",
+                    Message = "User Updated Successfully",
                     Status = ResultStatus.Success,
                     Data = true
                 };
             else
                 return new ServiceResult<bool>
                 {
-                    Message = "Employee Updated Successfully",
+                    Message = "User Updated Successfully",
                     Status = ResultStatus.Failure,
                     Data = false
                 };

@@ -1,10 +1,12 @@
 ﻿using HRMS.Application.Interfaces;
 using HRMS.Application.Services;
 using HRMS.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HRMS.Web.Controllers
 {
+    [Authorize(Roles ="Admin")]
     public class DepartmentController : Controller
     {
         private readonly IDepartmentService _service;
