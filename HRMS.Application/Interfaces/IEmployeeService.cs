@@ -10,9 +10,9 @@ namespace HRMS.Application.Interfaces
     public interface IEmployeeService
     {
         Task<ServiceResult<IEnumerable<Employee>>> GetAllAsync();
-        Task<ServiceResult<Employee>> GetByIdAsync(Guid id);
+        Task<ServiceResult<Employee>> GetByIdAsync(int id);
         Task<ServiceResult<bool>> AddAsync(Employee employee);
         Task<ServiceResult<bool>> UpdateAsync(Employee employee);
-        Task<ServiceResult<bool>> DeleteAsync(Guid id);
+        Task<ServiceResult<bool>> DeleteAsync(int id);
     }
 }

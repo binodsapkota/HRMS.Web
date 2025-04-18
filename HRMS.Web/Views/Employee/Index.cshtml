@@ -1,7 +1,8 @@
-﻿@model IEnumerable<HRMS.Application.DTOs.EmployeeDto>
+﻿@model IEnumerable<HRMS.Domain.Entities.Employee>
 
 @{
     ViewData["Title"] = "Index";
+    int index=0;
 }
 
 <h1>Index</h1>
@@ -12,12 +13,23 @@
 <table class="table">
     <thead>
         <tr>
-           
             <th>
-                @Html.DisplayNameFor(model => model.FullName)
+                SN
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Fullname)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateOfBirth)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.DepartmentId)
@@ -26,24 +38,49 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            
-            <td>
-                @Html.DisplayFor(modelItem => item.FullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DepartmentId)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            index++;
+            <tr>
+                <td>
+                    @index
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Fullname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateOfBirth)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PhoneNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Department.Name)
+                </td>
+                <td>
+                    <div class="btn btn-group">
+
+                        <a class="btn btn-sm btn-outline-warning" asp-action="edit" asp-route-id="@item.Id">
+                            <i class="fa fa-edit"></i>
+                            Edit
+                        </a>
+                        <a class="btn btn-sm btn-outline-success" asp-action="details" asp-route-id="@item.Id">
+                            <i class="fa fa-edit"></i>
+                            Details
+                        </a>
+                        <a class="btn btn-sm btn-outline-danger" asp-action="delete" asp-route-id="@item.Id">
+                            <i class="fa fa-edit"></i>
+                            Delete
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

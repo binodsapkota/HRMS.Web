@@ -1,49 +1,135 @@
-﻿using HRMS.Application.DTOs;
+﻿using HRMS.Application.Interfaces;
+using HRMS.Application.Services;
+using HRMS.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace HRMS.Web.Controllers
 {
+    [Authorize(Roles ="HR")]
     public class EmployeeController : Controller
     {
-        public IActionResult Index()
+        private readonly IEmployeeService _service;
+        private readonly IDepartmentService _departmentService;
+        public EmployeeController(IEmployeeService employeeService, IDepartmentService departmentService)
         {
-            return View();
+            _service = employeeService;
+            _departmentService = departmentService;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var data = await _service.GetAllAsync();
+            return View(data.Data);
         }
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var data = await _departmentService.GetAllAsync();
+            var departments = new SelectList(data.Data, "Id", "Name");
+            ViewBag.Departments = departments;
             return View();
         }
-        [HttpPost]
-        public IActionResult Create(EmployeeDto model)
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Employee employee)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                var result = await _service.AddAsync(employee);
+                switch (result.Status)
+                {
+                    case Application.DTOs.ResultStatus.Success:
+                        TempData["Message"] = result.Message;
+                        return RedirectToAction("Index");
+                    case Application.DTOs.ResultStatus.Failure:
+                    default:
+                        ViewBag.Message = result.Message;
+                        break;
+                }
+            }
+
+            await CreateDepartmentsViewbag();
+            return View(employee);
         }
-        [HttpGet]
-        public IActionResult Edit(Guid id)
+
+        private async Task CreateDepartmentsViewbag()
         {
-            return View();
-        }
-        [HttpPost]
-        public IActionResult Edit(EmployeeDto model)
-        {
-            return View();
-        }
-        [HttpGet]
-        public IActionResult Details(Guid Id)
-        {
-            return View();
+            var data = await _departmentService.GetAllAsync();
+            var departments = new SelectList(data.Data, "Id", "Name");
+            ViewBag.Departments = departments;
         }
 
         [HttpGet]
-        public IActionResult Delete(Guid Id)
+        public async Task<IActionResult> Edit(int id)
         {
-            return View();
+            var result = await _service.GetByIdAsync(id);
+            switch (result.Status)
+            {
+                case Application.DTOs.ResultStatus.Failure:
+                    TempData["Message"] = result.Message;
+                    return RedirectToAction("Index");
+                default:
+                    break;
+            }
+            await CreateDepartmentsViewbag();
+            return View(result.Data);
         }
-        [HttpPost("Delete")]
-        public IActionResult DeleteConfirmed(Guid Id)
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Employee employee)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                var result = await _service.UpdateAsync(employee);
+                switch (result.Status)
+                {
+                    case Application.DTOs.ResultStatus.Success:
+                        TempData["Message"] = result.Message;
+                        return RedirectToAction("Index");
+                    case Application.DTOs.ResultStatus.Failure:
+                    default:
+                        ViewBag.Message = result.Message;
+                        break;
+                } 
+            }
+            await CreateDepartmentsViewbag();
+            return View(employee);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _service.GetByIdAsync(id);
+            switch (result.Status)
+            {
+                case Application.DTOs.ResultStatus.Failure:
+                    TempData["Message"] = result.Message;
+                    return RedirectToAction("Index");
+                default:
+                    break;
+            }
+            return View(result.Data);
+        }
+        [HttpPost("Delete"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var result = await _service.DeleteAsync(id);
+            TempData["Message"] = result.Message;
+            return RedirectToAction("Index");
+        }
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            var result = await _service.GetByIdAsync(id);
+            switch (result.Status)
+            {
+                case Application.DTOs.ResultStatus.Failure:
+                    TempData["Message"] = result.Message;
+                    return RedirectToAction("Index");
+                default:
+                    break;
+            }
+            return View(result.Data);
         }
     }
 }
