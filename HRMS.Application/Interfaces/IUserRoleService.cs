@@ -15,5 +15,7 @@ namespace HRMS.Application.Interfaces
         Task<ServiceResult<bool>> AddAsync(UserRole user);
         Task<ServiceResult<bool>> UpdateAsync(UserRole User);
         Task<ServiceResult<bool>> DeleteAsync(int id);
+        Task<ServiceResult<List<User>>> GetAllUsersAsync();
+        Task<ServiceResult<List<Role>>> GetAllRolesAsync();
     }
 }

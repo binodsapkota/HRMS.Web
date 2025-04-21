@@ -55,5 +55,9 @@ namespace HRMS.Infrastructure.Persistence.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<List<Role>> GetRoleAsync()
+        {
+           return await _context.Roles.ToListAsync();
+        }
     }
 }
