@@ -1,13 +1,15 @@
-﻿using HRMS.Application.Interfaces;
+﻿using ClosedXML.Excel;
+using HRMS.Application.Interfaces;
 using HRMS.Application.Services;
 using HRMS.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Rotativa.AspNetCore;
 
 namespace HRMS.Web.Controllers
 {
-    [Authorize(Roles ="HR")]
+    [Authorize(Roles = "HR")]
     public class EmployeeController : Controller
     {
         private readonly IEmployeeService _service;
@@ -23,6 +25,54 @@ namespace HRMS.Web.Controllers
             var data = await _service.GetAllAsync();
             return View(data.Data);
         }
+        [HttpGet]
+        public async Task<IActionResult> ExportToExcel()
+        {
+            var data = await _service.GetAllAsync();
+
+            using (var workBook = new XLWorkbook())
+            {
+                var workSheet = workBook.Worksheets.Add("Employees");
+                workSheet.Cell(1, 1).Value = "ID";
+                workSheet.Cell(1, 2).Value = "Name";
+                workSheet.Cell(1, 3).Value = "Email";
+                workSheet.Cell(1, 4).Value = "Department";
+
+                int row = 2;
+
+                foreach (var employee in data.Data)
+                {
+                    workSheet.Cell(row, 1).Value = employee.Id;
+                    workSheet.Cell(row, 2).Value = employee.Fullname;
+                    workSheet.Cell(row, 3).Value = employee.Email;
+                    workSheet.Cell(row, 4).Value = employee.Department?.Name;
+
+                    row++;
+                }
+
+                using (var stream= new MemoryStream())
+                {
+                    workBook.SaveAs(stream);
+
+                    stream.Position = 0;
+
+                    return File(stream.ToArray(),
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "Employee.xlsx"
+                        );
+                }
+            }
+
+           
+        }
+
+        [HttpGet]
+        public IActionResult ExportToPdf()
+        {
+            var data =  _service.GetAllAsync().Result;
+            return new ViewAsPdf("ExportToPdf", data.Data) {FileName="Employee.pdf" };
+        }
+
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -90,7 +140,7 @@ namespace HRMS.Web.Controllers
                     default:
                         ViewBag.Message = result.Message;
                         break;
-                } 
+                }
             }
             await CreateDepartmentsViewbag();
             return View(employee);

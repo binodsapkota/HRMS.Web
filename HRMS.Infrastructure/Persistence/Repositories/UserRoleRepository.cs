@@ -39,13 +39,18 @@ namespace HRMS.Infrastructure.Persistence.Repositories
 
         public async Task<IEnumerable<UserRole>> GetAllAsync()
         {
-            var data = await _context.UserRoles.Include(x => x.User).ToListAsync();
+            var data = await _context.UserRoles
+                .Include(x => x.User)
+                .Include(x=>x.Role).ToListAsync();
             return data;
         }
 
         public async Task<UserRole> GetByIdAsync(int id)
         {
-            var data = await _context.UserRoles.Include(x => x.User).FirstOrDefaultAsync(e => e.Id == id);
+            var data = await _context.UserRoles
+                .Include(x => x.User)
+                .Include(x=>x.Role)
+                .FirstOrDefaultAsync(e => e.Id == id);
             return data;
         }
 

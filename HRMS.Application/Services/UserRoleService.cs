@@ -13,10 +13,13 @@ namespace HRMS.Application.Services
     public class UserRoleService : IUserRoleService
     {
         private readonly UserRoleRepository _userRoleRepo;
+        private readonly UserRepository _userRepo;
 
-        public UserRoleService(UserRoleRepository userRoleRepository)
+
+        public UserRoleService(UserRoleRepository userRoleRepository, UserRepository userRepository)
         {
             _userRoleRepo = userRoleRepository;
+            _userRepo = userRepository;
         }
 
         public async Task<ServiceResult<bool>> AddAsync(UserRole userRole)
@@ -67,13 +70,35 @@ namespace HRMS.Application.Services
             };
         }
 
+        public async Task<ServiceResult<List<Role>>> GetAllRolesAsync()
+        {
+            var data = await _userRepo.GetRoleAsync();
+            return new ServiceResult<List<Role>>()
+            {
+                Data = data,
+                Status = ResultStatus.Success,
+
+
+            };
+        }
+
+        public async Task<ServiceResult<List<User>>> GetAllUsersAsync()
+        {
+            var data = await _userRepo.GetAllAsync();
+            return new ServiceResult<List<User>>()
+            {
+                Data = data.ToList(),
+                Status = ResultStatus.Success
+            };
+        }
+
         public async Task<ServiceResult<UserRole>> GetByIdAsync(int id)
         {
             var data = await _userRoleRepo.GetByIdAsync(id);
             return new ServiceResult<UserRole>
             {
                 Data = data,
-                Status=ResultStatus.Success
+                Status = ResultStatus.Success
             };
         }
 
@@ -96,6 +121,6 @@ namespace HRMS.Application.Services
                 };
         }
 
-       
+
     }
 }
